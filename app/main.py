@@ -79,6 +79,7 @@ async def generate(request: GenerateRequest):
         "stream": False,
         "options": {
             "temperature": request.temperature,
+            "num_predict": 128,
         },
     }
 
