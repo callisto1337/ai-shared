@@ -8,14 +8,14 @@ scrape_configs:
       - targets:
           - lead-scanner-prometheus:9090
 
-  - job_name: model-api
+  - job_name: lead-scanner-monitor
     metrics_path: /metrics
     static_configs:
       - targets:
-          - lead-scanner-model-api:8000
+          - lead-scanner-monitor:8002
 
-  - job_name: lead-scanner-admin
+  - job_name: lead-scanner-bot
     metrics_path: /metrics
     static_configs:
       - targets:
-          - lead-scanner-admin:8001
+          - lead-scanner-bot:8003
