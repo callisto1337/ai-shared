@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - lead-scanner-prometheus:9090
+
+  - job_name: model-api
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - lead-scanner-model-api:8000
+
+  - job_name: lead-scanner-admin
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - lead-scanner-admin:8001
