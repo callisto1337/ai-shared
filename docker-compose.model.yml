@@ -32,7 +32,7 @@ services:
     networks:
       - lead-scanner-net
 
-    gpus: all
+#    gpus: all
 
   ollama-pull:
     image: ollama/ollama:latest
