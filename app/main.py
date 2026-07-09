@@ -77,6 +77,7 @@ async def generate(request: GenerateRequest):
         "model": model,
         "prompt": request.prompt,
         "stream": False,
+        "format": "json",
         "options": {
             "temperature": request.temperature,
             "num_predict": 128,
