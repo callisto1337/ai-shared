@@ -69,6 +69,32 @@ async def health():
         )
 
 
+OUTPUT_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "niche_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+        },
+        "intent_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+        },
+        "description": {
+            "type": "string",
+        },
+    },
+    "required": [
+        "niche_score",
+        "intent_score",
+        "description",
+    ],
+    "additionalProperties": False,
+}
+
+
 @app.post("/generate", response_model=GenerateResponse)
 async def generate(request: GenerateRequest):
     model = request.model or DEFAULT_MODEL
@@ -77,15 +103,18 @@ async def generate(request: GenerateRequest):
         "model": model,
         "prompt": request.prompt,
         "stream": False,
-        "format": "json",
+        "format": OUTPUT_SCHEMA,
         "options": {
             "temperature": request.temperature,
-            "num_predict": 128,
+            "num_predict": 256,
         },
     }
 
-    if request.format:
-        payload["format"] = request.format
+    if model.startswith("qwen3"):
+        payload["think"] = False
+
+    # if request.format:
+    #     payload["format"] = request.format
 
     try:
         async with httpx.AsyncClient(timeout=OLLAMA_TIMEOUT) as client:
@@ -111,6 +140,18 @@ async def generate(request: GenerateRequest):
         )
 
     result = response.json()
+
+    print(
+        {
+            "model": result.get("model"),
+            "response": result.get("response"),
+            "thinking": result.get("thinking"),
+            "done_reason": result.get("done_reason"),
+            "eval_count": result.get("eval_count"),
+        },
+        flush=True,
+    )
+
     raw = result.get("response", "")
 
     if request.format == "json":
