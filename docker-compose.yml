@@ -6,7 +6,7 @@ services:
 
     environment:
       OLLAMA_HOST: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      OLLAMA_MODEL: qwen3:14b
       OLLAMA_TIMEOUT: 90
 
     ports:
@@ -44,7 +44,7 @@ services:
 
     environment:
       OLLAMA_HOST: http://ollama:11434
-      MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      MODEL: qwen2.5:7b
 
     volumes:
       - ollama-data:/root/.ollama
@@ -62,81 +62,8 @@ services:
     networks:
       - lead-scanner-net
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: lead-scanner-grafana
-    restart: always
-
-    ports:
-      - "3000:3000"
-
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_ALLOW_SIGN_UP: "false"
-
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
-
-    networks:
-      - lead-scanner-net
-
-  prometheus:
-    image: prom/prometheus
-    container_name: lead-scanner-prometheus
-    restart: always
-
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
-
-    ports:
-      - "9090:9090"
-
-    networks:
-      - lead-scanner-net
-
-  loki:
-    image: grafana/loki:latest
-    container_name: lead-scanner-loki
-    restart: always
-
-    ports:
-      - "3100:3100"
-
-    volumes:
-      - loki-data:/loki
-
-    networks:
-      - lead-scanner-net
-
-  promtail:
-    image: grafana/promtail:latest
-    container_name: lead-scanner-promtail
-    restart: always
-
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./promtail.yml:/etc/promtail/config.yml
-      - promtail-data:/tmp
-
-    command:
-      - -config.file=/etc/promtail/config.yml
-
-    depends_on:
-      - loki
-
-    networks:
-      - lead-scanner-net
-
 volumes:
   ollama-data:
-  grafana-data:
-  prometheus-data:
-  loki-data:
-  promtail-data:
 
 networks:
   lead-scanner-net:
