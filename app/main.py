@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Lead Scanner Model API")
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://ollama:11434")
-DEFAULT_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:14b")
+DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "qwen3:14b")
 OLLAMA_TIMEOUT = float(os.getenv("OLLAMA_TIMEOUT", "60"))
 
 
