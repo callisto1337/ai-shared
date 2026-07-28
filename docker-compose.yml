@@ -40,7 +40,7 @@ services:
       - --port
       - "8000"
       - --max-model-len
-      - "4096"
+      - "8192"
       - --gpu-memory-utilization
       - "0.85"
       - --max-num-seqs

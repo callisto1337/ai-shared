@@ -141,7 +141,7 @@ async def generate(
         ],
         "stream": False,
         "temperature": request.temperature,
-        "max_tokens": 256,
+        "max_tokens": 128,
         "chat_template_kwargs": {
             "enable_thinking": False,
         },
