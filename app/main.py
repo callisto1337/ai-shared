@@ -145,6 +145,7 @@ async def generate(
         "chat_template_kwargs": {
             "enable_thinking": False,
         },
+        "enable_prefix_caching": True,
     }
 
     if request.format == "json":
