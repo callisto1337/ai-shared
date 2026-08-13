@@ -1,24 +1,4 @@
 services:
-  model-api:
-    build: .
-    container_name: lead-scanner-model-api
-    restart: always
-
-    environment:
-      VLLM_HOST: http://vllm:8000
-      DEFAULT_MODEL: Qwen/Qwen3-14B-AWQ
-      VLLM_TIMEOUT: 90
-
-    ports:
-      - "8000:8000"
-
-    depends_on:
-      vllm:
-        condition: service_started
-
-    networks:
-      - lead-scanner-net
-
   vllm:
     image: vllm/vllm-openai:v0.19.0
     container_name: lead-scanner-vllm
@@ -27,8 +7,14 @@ services:
     ipc: host
     gpus: all
 
+    env_file:
+      - .env
+
     volumes:
       - huggingface-cache:/root/.cache/huggingface
+
+    ports:
+      - "8000:8000"
 
     command:
       - --model
@@ -45,12 +31,14 @@ services:
       - "0.85"
       - --max-num-seqs
       - "4"
+      - --api-key
+      - ${VLLM_API_KEY}
 
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -fsS http://localhost:8000/v1/models >/dev/null || exit 1"
+          "curl -fsS -H \"Authorization: Bearer ${VLLM_API_KEY}\" http://localhost:8000/v1/models >/dev/null || exit 1"
         ]
       interval: 10s
       timeout: 5s
