@@ -31,6 +31,8 @@ services:
       - "0.85"
       - --max-num-seqs
       - "4"
+      - --reasoning-parser
+      - qwen3
       - --api-key
       - ${VLLM_API_KEY}
 
